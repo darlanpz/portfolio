@@ -1,4 +1,4 @@
-import svgPaths from "../../imports/svg-js9kdhfw15";
+import svgPaths from "@/assets/svg-js9kdhfw15";
 
 export function WhatsAppIcon({ size = 18 }: { size?: number }) {
   return (

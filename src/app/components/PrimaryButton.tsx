@@ -1,4 +1,4 @@
-import svgPaths from "../../imports/svg-7wxsev1uss";
+import svgPaths from "@/assets/svg-7wxsev1uss";
 
 interface PrimaryButtonProps {
   label: string;

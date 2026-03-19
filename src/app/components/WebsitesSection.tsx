@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import svgPaths from "../../imports/svg-8c58j1dinl";
-import imgImg  from "@/assets/website-bata.png";
-import imgImg1 from "@/assets/website-gama.png";
-import imgImg2 from "@/assets/website-jn.png";
-import imgImg3 from "@/assets/website-redeorigen.png";
-import imgImg4 from "@/assets/website-dotto.png";
-import imgImg5 from "@/assets/website-inpalco.png";
-import imgImg6 from "@/assets/website-cr3.png";
+import svgPaths from "@/assets/svg-8c58j1dinl";
+import imgImg  from "@/assets/website-bata.webp";
+import imgImg1 from "@/assets/website-gama.webp";
+import imgImg2 from "@/assets/website-jn.webp";
+import imgImg3 from "@/assets/website-redeorigen.webp";
+import imgImg4 from "@/assets/website-dotto.webp";
+import imgImg5 from "@/assets/website-inpalco.webp";
+import imgImg6 from "@/assets/website-cr3.webp";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 type TechType = "figma" | "html" | "css" | "wordpress" | "elementor" | "prismic" | "next";

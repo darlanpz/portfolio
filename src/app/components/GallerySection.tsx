@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import imgGallery01 from "@/assets/editorial-tour-museus.png";
-import imgGallery03 from "@/assets/brand-vitor-garcia.png";
-import imgImage122 from "@/assets/brand-butecos.png";
-import imgImage124 from "@/assets/brand-menina-bonita.png";
-import imgImage130 from "@/assets/editorial-sabores-sb.png";
-import imgGallery02 from "@/assets/brand-praxis-1.png";
-import imgRectangle35 from "@/assets/brand-praxis-2.png";
-import imgImage129 from "@/assets/pd-affemg.png";
-import imgImage131 from "@/assets/graphic-museus.png";
+import imgGallery01 from "@/assets/editorial-tour-museus.webp";
+import imgGallery03 from "@/assets/brand-vitor-garcia.webp";
+import imgImage122 from "@/assets/brand-butecos.webp";
+import imgImage124 from "@/assets/brand-menina-bonita.webp";
+import imgImage130 from "@/assets/editorial-sabores-sb.webp";
+import imgGallery02 from "@/assets/brand-praxis-1.webp";
+import imgRectangle35 from "@/assets/brand-praxis-2.webp";
+import imgImage129 from "@/assets/pd-affemg.webp";
+import imgImage131 from "@/assets/graphic-museus.webp";
 
 // ── Desktop reveal wrapper ────────────────────────────────────────────────────
 function RevealCard({

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import imgPortrait from "@/assets/profile.png";
+import imgPortrait from "@/assets/profile.webp";
 import { LinkButton } from "./LinkButton";
 import { WhatsAppIcon, LinkedInIcon, BehanceIcon } from "./Icons";
 import { RotatingText } from "./RotatingText";

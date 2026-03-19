@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import imgCase1 from "@/assets/case-prop-01.png";
-import imgCase2 from "@/assets/case-prop-02.png";
-import imgCase3 from "@/assets/case-prop-03.png";
+import imgCase1 from "@/assets/case-prop-01.webp";
+import imgCase2 from "@/assets/case-prop-02.webp";
+import imgCase3 from "@/assets/case-prop-03.webp";
 
 // ── Reveal hook ───────────────────────────────────────────────────────────────
 function useReveal(delay = 0) {

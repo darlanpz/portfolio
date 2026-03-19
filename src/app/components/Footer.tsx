@@ -1,4 +1,4 @@
-import svgPaths from "../../imports/svg-pb5znzzzp9";
+import svgPaths from "@/assets/svg-pb5znzzzp9";
 import { PrimaryButton } from "./PrimaryButton";
 import { LinkButton } from "./LinkButton";
 
