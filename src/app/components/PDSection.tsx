@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import imgImage128 from "@/assets/case-prop-1.png";
-import imgImage129 from "@/assets/case-prop-2.png";
-import imgImage127 from "@/assets/case-prop-3.png";
+import imgCase1 from "@/assets/case-prop-01.png";
+import imgCase2 from "@/assets/case-prop-02.png";
+import imgCase3 from "@/assets/case-prop-03.png";
 
 // ── Reveal hook ───────────────────────────────────────────────────────────────
 function useReveal(delay = 0) {
@@ -39,9 +39,10 @@ interface PDCardProps {
   image: string;
   alt: string;
   delay?: number;
+  url: string;
 }
 
-function PDCard({ image, alt, delay = 0 }: PDCardProps) {
+function PDCard({ image, alt, url, delay = 0 }: PDCardProps) {
   const { ref, style } = useReveal(delay);
 
   return (
@@ -54,7 +55,7 @@ function PDCard({ image, alt, delay = 0 }: PDCardProps) {
         />
         {/* Purple border overlay */}
         <a
-          href="https://drive.google.com/file/d/1UKN3CJ84Y9auu3jB6hyEQdc39S_HFbMz/view?usp=drive_link"
+          href={url}
           target="_blank"
           rel="noopener noreferrer"
           aria-label={alt}
@@ -95,16 +96,28 @@ function StickyText() {
 
 // ── Cards column ──────────────────────────────────────────────────────────────
 const CARDS = [
-  { image: imgImage128, alt: "Case 1 – A Arquitetura de uma Plataforma Escalável" },
-  { image: imgImage129, alt: "Case 2 – O Primeiro Módulo da Plataforma Propulsor" },
-  { image: imgImage127, alt: "Case 3 – Integração, Transparência e Automação com o Follow Up" },
+  { 
+    image: imgCase1,
+    alt: "Case 1 – A Arquitetura de uma Plataforma Escalável",
+    url: "https://drive.google.com/file/d/1bkpJVjxAV7rBGTRCuMHqhjz_EqQwKEYC/view?usp=drive_link", 
+  },
+  { 
+    image: imgCase2,
+    alt: "Case 2 – O Primeiro Módulo da Plataforma Propulsor",
+    url: "https://drive.google.com/file/d/17sp_x9c1fen4TfW8WHgHlu31_Gnl2p50/view?usp=drive_link", 
+  },
+  { 
+    image: imgCase3,
+    alt: "Case 3 – Integração, Transparência e Automação com o Follow Up",
+    url: "https://drive.google.com/file/d/1UKN3CJ84Y9auu3jB6hyEQdc39S_HFbMz/view?usp=drive_link", 
+  },
 ];
 
 function CardsColumn() {
   return (
     <div className="w-full lg:w-[calc(50%-24px)] lg:flex-none flex flex-col gap-[48px]">
       {CARDS.map((card, i) => (
-        <PDCard key={card.alt} image={card.image} alt={card.alt} delay={i * 120} />
+        <PDCard key={card.alt} image={card.image} alt={card.alt} url={card.url} delay={i * 120} />
       ))}
     </div>
   );
