@@ -72,11 +72,11 @@ export function Footer() {
           icon={<BehanceIcon />}
         />
 
-        <LinkButton
+        {/* <LinkButton
           label="/darlan_paz"
           href="https://instagram.com/darlan_paz"
           icon={<InstagramIcon />}
-        />
+        /> */}
       </div>
     </footer>
   );

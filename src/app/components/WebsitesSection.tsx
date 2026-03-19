@@ -177,8 +177,8 @@ function SectionTitle({ mobile }: { mobile?: boolean }) {
 const PROJECTS: Omit<CardProps, "delay">[] = [
   { title: "Bataiolli",  url: "www.bataiolli.com.br",     image: imgImg,  techs: ["figma", "html", "css"],                    col: 2, row: 1 },
   { title: "Gama-log",   url: "www.gama-log.com.br",      image: imgImg1, techs: ["figma", "wordpress", "elementor"],          col: 1, row: 2 },
-  { title: "JN Contábil",url: "www.jncontabil.com.br",    image: imgImg2, techs: ["figma", "wordpress", "elementor"],          col: 2, row: 2 },
   { title: "Origen",     url: "www.redeorigen.com.br",    image: imgImg3, techs: ["figma", "wordpress", "elementor"],          col: 1, row: 3 },
+  { title: "JN Contábil",url: "www.jncontabil.com.br",    image: imgImg2, techs: ["figma", "wordpress", "elementor"],          col: 2, row: 2 },
   { title: "Dotto",      url: "www.dottoautopecas.com",   image: imgImg4, techs: ["figma", "wordpress", "elementor"],          col: 2, row: 3 },
   { title: "InPalco",    url: "www.inpalco.com.br",       image: imgImg5, techs: ["figma", "prismic", "next"],                 col: 1, row: 4 },
   { title: "CR3",        url: "www.cr3auditoria.com.br",  image: imgImg6, techs: ["figma", "next"],                            col: 2, row: 4 },
