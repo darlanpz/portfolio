@@ -1,55 +1,45 @@
-import svgPaths from "@/assets/svg-7wxsev1uss";
+import { WhatsAppIcon } from "./Icons";
 
 interface PrimaryButtonProps {
   label: string;
   onClick?: () => void;
   href?: string;
+  /** On mobile, hide the label and render a square icon-only button. */
+  compactMobile?: boolean;
 }
 
-const baseClass =
-  "inline-flex items-center justify-center gap-3 py-3 px-5 bg-[#b4a8fa] hover:bg-[#8B78F7] rounded shrink-0 relative cursor-pointer border-none transition-colors duration-100 ease-[ease]";
+// Same shape/typography as LinkButton, but filled white instead of outlined.
+const baseClass = (compactMobile?: boolean) =>
+  `inline-flex items-center justify-center gap-3 py-3 px-5 ${
+    compactMobile ? "max-lg:px-3" : ""
+  } bg-white text-[#141414] no-underline shrink-0 whitespace-nowrap text-[16px] leading-[1] tracking-[-0.32px] border-none cursor-pointer transition-colors duration-200 ease-[ease] hover:bg-[#e3e3e3]`;
 
-const content = (label: string) => (
+const content = (label: string, compactMobile?: boolean) => (
   <>
-    {/* Inner bottom border overlay (from Figma) */}
-    <div
-      aria-hidden="true"
-      className="absolute inset-0 rounded border-b border-[#8b78f7] pointer-events-none"
-    />
     <span
-      className="relative shrink-0 text-[#360077] whitespace-nowrap tracking-[-0.32px] text-[16px] leading-[1]"
+      className={`relative shrink-0 ${compactMobile ? "max-lg:hidden" : ""}`}
       style={{ fontFamily: "'Golos Text', sans-serif", fontWeight: 400 }}
     >
       {label}
     </span>
-    {/* Icon */}
-    <div className="w-6 h-6 relative shrink-0 overflow-hidden">
-      <div className="absolute inset-[18.75%]">
-        <svg
-          className="absolute block w-full h-full"
-          fill="none"
-          preserveAspectRatio="none"
-          viewBox="0 0 15 15"
-        >
-          <path d={svgPaths.p3b93fe00} fill="#360077" />
-        </svg>
-      </div>
+    <div className="w-6 h-6 shrink-0 flex items-center justify-center">
+      <WhatsAppIcon size={20} />
     </div>
   </>
 );
 
-export function PrimaryButton({ label, onClick, href }: PrimaryButtonProps) {
+export function PrimaryButton({ label, onClick, href, compactMobile }: PrimaryButtonProps) {
   if (href) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={baseClass}>
-        {content(label)}
+      <a href={href} target="_blank" rel="noopener noreferrer" className={baseClass(compactMobile)}>
+        {content(label, compactMobile)}
       </a>
     );
   }
 
   return (
-    <button className={baseClass} onClick={onClick}>
-      {content(label)}
+    <button className={baseClass(compactMobile)} onClick={onClick}>
+      {content(label, compactMobile)}
     </button>
   );
 }

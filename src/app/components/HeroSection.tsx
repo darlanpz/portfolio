@@ -1,102 +1,135 @@
 import { useEffect, useRef } from "react";
-import imgPortrait from "@/assets/profile.webp";
-import { LinkButton } from "./LinkButton";
-import { WhatsAppIcon, LinkedInIcon, BehanceIcon } from "./Icons";
-import { RotatingText } from "./RotatingText";
-
-const links = [
-  {
-    label: "55 9 9669 8296",
-    icon: <WhatsAppIcon size={20} />,
-    href: "https://wa.me/55996698296",
-  },
-  {
-    label: "/darlanpaz77",
-    icon: <LinkedInIcon size={20} />,
-    href: "https://linkedin.com/in/darlanpaz77",
-  },
-  {
-    label: "/darlanpaz",
-    icon: <BehanceIcon size={20} />,
-    href: "https://behance.net/darlanpaz",
-  },
-];
+import imgDarlan from "@/assets/profileDarlan.webp";
+import imgVitor from "@/assets/profileVitor.webp";
 
 export function HeroSection() {
-  const sealRef = useRef<HTMLDivElement>(null);
-  const targetY = useRef(0);
-  const currentY = useRef(0);
+  const hintRef = useRef<HTMLDivElement>(null);
+  const leftRef = useRef<HTMLDivElement>(null);
+  const rightRef = useRef<HTMLDivElement>(null);
+  const hintCur = useRef(1);
+  const imgCur = useRef(1);
   const rafId = useRef<number>(0);
 
   useEffect(() => {
-    const onScroll = () => {
-      targetY.current = -window.scrollY * 0.09;
-    };
-
     const animate = () => {
-      currentY.current += (targetY.current - currentY.current) * 0.055;
-      if (sealRef.current) {
-        sealRef.current.style.transform = `translateY(${currentY.current.toFixed(2)}px)`;
-      }
+      const y = window.scrollY;
+      const vh = window.innerHeight || 800;
+
+      // scroll cue fades over the first ~250px
+      const hintTarget = Math.max(0, 1 - y / 250);
+      hintCur.current += (hintTarget - hintCur.current) * 0.12;
+      if (hintRef.current) hintRef.current.style.opacity = hintCur.current.toFixed(3);
+
+      // portraits fade out across ~85% of the viewport height
+      const imgTarget = Math.max(0, 1 - y / (vh * 0.85));
+      imgCur.current += (imgTarget - imgCur.current) * 0.12;
+      const o = imgCur.current.toFixed(3);
+      if (leftRef.current) leftRef.current.style.opacity = o;
+      if (rightRef.current) rightRef.current.style.opacity = o;
+
       rafId.current = requestAnimationFrame(animate);
     };
 
-    window.addEventListener("scroll", onScroll, { passive: true });
     rafId.current = requestAnimationFrame(animate);
-
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      cancelAnimationFrame(rafId.current);
-    };
+    return () => cancelAnimationFrame(rafId.current);
   }, []);
 
   return (
-    <section className="flex flex-row gap-12 items-start w-full max-w-[1344px] max-lg:flex-col max-lg:p-4 max-lg:gap-6 px-[16px] md:px-[48px] py-[48px] [animation:fadeInTop_0.7s_ease_both]">
-      {/* Portrait image + rotating seal */}
-      <div className="[flex:1_0_0] h-[512px] min-w-[600px] relative rounded-lg overflow-visible max-lg:w-full max-lg:min-w-0 max-lg:flex-none max-lg:h-[320px]">
+    <section className="relative min-h-[100dvh] w-full flex flex-wrap lg:flex-nowrap items-start lg:justify-between gap-6 max-lg:gap-y-0 overflow-visible [animation:fadeInTop_0.7s_ease_both]">
+      {/* marching-dots keyframe for the dotted arrow */}
+      <style>{`@keyframes heroDash { to { stroke-dashoffset: -11; } }`}</style>
+
+      {/* Left portrait — hugs the left edge on desktop */}
+      <div
+        ref={leftRef}
+        style={{
+          willChange: "opacity",
+          // fade toward the centre (inner edge) + a soft radial fade at the bottom
+          maskImage:
+            "linear-gradient(to right, #000 40%, rgba(0,0,0,0.75) 62%, rgba(0,0,0,0.3) 84%, transparent 100%), radial-gradient(160% 130% at 50% -15%, #000 42%, rgba(0,0,0,0.4) 78%, transparent 100%)",
+          WebkitMaskImage:
+            "linear-gradient(to right, #000 40%, rgba(0,0,0,0.75) 62%, rgba(0,0,0,0.3) 84%, transparent 100%), radial-gradient(160% 130% at 50% -15%, #000 42%, rgba(0,0,0,0.4) 78%, transparent 100%)",
+          maskComposite: "intersect",
+          WebkitMaskComposite: "source-in",
+        }}
+        className="order-1 relative shrink-0 w-[calc(50%-12px)] lg:w-[30%] h-[50dvh] lg:h-[100dvh] rounded-tl-none rounded-tr-none rounded-bl-lg lg:rounded-bl-none rounded-br-lg overflow-hidden"
+      >
         <img
-          src={imgPortrait}
+          src={imgDarlan}
           alt="Darlan Paz"
-          className="absolute inset-0 w-full h-full object-cover rounded-lg pointer-events-none max-w-none"
+          className="w-full h-full object-cover object-top scale-[1.4] origin-top pointer-events-none max-w-none"
         />
-        {/* Rotating seal — parallax wrapper */}
-        <div className="absolute right-[0] -bottom-[70px] md:-bottom-[60px] md:-right-[60px]">
-          <div ref={sealRef} style={{ willChange: "transform" }}>
-            <RotatingText />
+      </div>
+
+      {/* Center text + scroll hint (evenly distributed on desktop) */}
+      <div className="relative z-10 order-3 lg:order-2 lg:self-stretch w-full lg:flex-1 flex flex-col items-center text-center gap-8 lg:gap-0 max-lg:-mt-[240px] max-lg:min-h-[50dvh] max-lg:justify-center lg:justify-evenly max-lg:px-4 lg:px-8">
+        <div className="flex flex-col items-center gap-6">
+          {/* Title */}
+          <div
+            className="whitespace-pre-wrap text-[#e3e3e3] text-[32px] lg:text-[48px] leading-[1.2]"
+            style={{ fontFamily: "'Golos Text', sans-serif", fontWeight: 500 }}
+          >
+            <p className="m-0">Design Alinhado </p>
+            <p className="m-0">à Estratégia</p>
           </div>
+
+          {/* Description */}
+          <p
+            className="text-[#bfbfc0] m-0 max-w-[520px] text-[16px] lg:text-[20px] leading-[1.5]"
+            style={{ fontFamily: "'Golos Text', sans-serif", fontWeight: 400 }}
+          >
+            Alinhamos estratégia e negócio a Product Design, Design Gráfico e Audiovisual para criar soluções simples, funcionais e feitas para pessoas.
+          </p>
         </div>
       </div>
 
-      {/* Text column */}
-      <div className="md:[flex:1_0_0] flex flex-col gap-6 overflow-hidden">
-        {/* Title */}
-        <div
-          className="w-full whitespace-pre-wrap text-[#e3e3e3] text-[48px] leading-[1.2]"
-          style={{ fontFamily: "'Golos Text', sans-serif", fontWeight: 500 }}
-        >
-          <p className="m-0">Design Alinhado </p>
-          <p className="m-0">à Estratégia</p>
+      {/* Right portrait — hugs the right edge on desktop */}
+      <div
+        ref={rightRef}
+        style={{
+          willChange: "opacity",
+          // fade toward the centre (inner edge) + a soft radial fade at the bottom
+          maskImage:
+            "linear-gradient(to left, #000 40%, rgba(0,0,0,0.75) 62%, rgba(0,0,0,0.3) 84%, transparent 100%), radial-gradient(160% 130% at 50% -15%, #000 42%, rgba(0,0,0,0.4) 78%, transparent 100%)",
+          WebkitMaskImage:
+            "linear-gradient(to left, #000 40%, rgba(0,0,0,0.75) 62%, rgba(0,0,0,0.3) 84%, transparent 100%), radial-gradient(160% 130% at 50% -15%, #000 42%, rgba(0,0,0,0.4) 78%, transparent 100%)",
+          maskComposite: "intersect",
+          WebkitMaskComposite: "source-in",
+        }}
+        className="order-2 lg:order-3 relative shrink-0 w-[calc(50%-12px)] lg:w-[30%] h-[50dvh] lg:h-[100dvh]"
+      >
+        <div className="absolute inset-0 overflow-hidden rounded-tr-none rounded-tl-none rounded-br-lg lg:rounded-br-none rounded-bl-lg">
+          <img
+            src={imgVitor}
+            alt="Vitor Garcia"
+            className="w-full h-full object-cover object-top scale-[1.4] origin-top pointer-events-none max-w-none"
+          />
         </div>
+      </div>
 
-        {/* Description */}
-        <p
-          className="text-[#bfbfc0] m-0 w-full text-[16px] leading-[1.5]"
-          style={{ fontFamily: "'Golos Text', sans-serif", fontWeight: 400 }}
-        >
-          Especialista em alinhar estratégia tecnológica à utilidade humana para criar soluções que funcionam. Com sete anos de experiência, ganhei um olhar estratégico para alinhar tecnologia e negócio e ajudar a construir produtos que são simples, funcionais e acima de tudo, feito para pessoas.
-        </p>
-
-        {/* Link buttons */}
-        <div className="flex flex-wrap gap-4 items-start pt-3 w-full">
-          {links.map((link) => (
-            <LinkButton
-              key={link.label}
-              label={link.label}
-              icon={link.icon}
-              href={link.href}
-            />
-          ))}
-        </div>
+      {/* Dotted down-arrow scroll cue — marching dots, fades out on scroll */}
+      <div
+        ref={hintRef}
+        className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 text-[#bfbfc0]"
+        style={{ willChange: "opacity" }}
+      >
+        <svg width="30" height="90" viewBox="0 0 20 60" fill="none">
+          <path
+            d="M10 1 L10 49"
+            stroke="currentColor"
+            strokeWidth="1"
+            strokeLinecap="round"
+            strokeDasharray="0.5 5"
+            style={{ animation: "heroDash 0.9s linear infinite" }}
+          />
+          <path
+            d="M3.5 43 L10 51 L16.5 43"
+            stroke="currentColor"
+            strokeWidth="1"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
       </div>
     </section>
   );

@@ -1,15 +1,54 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
-import imgGallery01 from "@/assets/editorial-tour-museus.webp";
-import imgGallery03 from "@/assets/brand-vitor-garcia.webp";
-import imgImage122 from "@/assets/brand-butecos.webp";
-import imgImage124 from "@/assets/brand-menina-bonita.webp";
-import imgImage130 from "@/assets/editorial-sabores-sb.webp";
-import imgGallery02 from "@/assets/brand-praxis-1.webp";
-import imgRectangle35 from "@/assets/brand-praxis-2.webp";
-import imgImage129 from "@/assets/pd-affemg.webp";
-import imgImage131 from "@/assets/graphic-museus.webp";
+import img1 from "@/assets/photo-gallery-1.webp";
+import img2 from "@/assets/photo-gallery-2.webp";
+import img4 from "@/assets/photo-gallery-4.webp";
+import img5 from "@/assets/photo-gallery-5.webp";
+import img7 from "@/assets/photo-gallery-7.webp";
+import img8 from "@/assets/photo-gallery-8.webp";
+import vid1 from "@/assets/gallery-video-1.mp4";
+import vid2 from "@/assets/gallery-video-2.mp4";
+import vidPoster1 from "@/assets/gallery-video-1.webp";
+import vidPoster2 from "@/assets/gallery-video-2.webp";
+
+// ── Gallery media (portrait images + autoplay videos) ─────────────────────────
+type MediaItem =
+  | { src: string; alt: string }
+  | { video: string; poster: string; alt: string };
+
+const MEDIA: MediaItem[] = [
+  { src: img1, alt: "Galeria 1" },
+  { src: img2, alt: "Galeria 2" },
+  { video: vid1, poster: vidPoster1, alt: "Galeria 3" }, // posição 3
+  { src: img4, alt: "Galeria 4" },
+  { src: img5, alt: "Galeria 5" },
+  { video: vid2, poster: vidPoster2, alt: "Galeria 6" }, // posição 6
+  { src: img7, alt: "Galeria 7" },
+  { src: img8, alt: "Galeria 8" },
+];
+
+// ── Media renderer (image or muted autoplay video) ────────────────────────────
+function Media({ item, className }: { item: MediaItem; className: string }) {
+  if ("video" in item) {
+    return (
+      <video
+        className={className}
+        src={item.video}
+        poster={item.poster}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        aria-label={item.alt}
+      />
+    );
+  }
+  return (
+    <img className={className} src={item.src} alt={item.alt} draggable={false} />
+  );
+}
 
 // ── Desktop reveal wrapper ────────────────────────────────────────────────────
 function RevealCard({
@@ -58,18 +97,6 @@ function RevealCard({
 }
 
 // ── Mobile carousel ───────────────────────────────────────────────────────────
-const MOBILE_CARDS = [
-  { alt: "Gallery 01", src: imgGallery01, w: 200, inner: null },
-  { alt: "Gallery 03", src: imgGallery03, w: 320, inner: null },
-  { alt: "Image 122",  src: imgImage122,  w: 220, inner: null },
-  { alt: "Image 124",  src: imgImage124,  w: 260, inner: null },
-  { alt: "Image 130",  src: imgImage130,  w: 200, inner: "h-[119.47%] left-0 top-0 w-full" },
-  { alt: "Gallery 02", src: imgGallery02, w: 320, inner: null },
-  { alt: "Rectangle 35", src: imgRectangle35, w: 200, inner: "h-[108.25%] left-0 top-[-8.25%] w-[128.36%]" },
-  { alt: "Image 129", src: imgImage129,  w: 320, inner: null },
-  { alt: "Image 131", src: imgImage131,  w: 260, inner: "h-full left-[-5.74%] top-0 w-[113.72%]" },
-] as const;
-
 function MobileCarousel() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -139,7 +166,7 @@ function MobileCarousel() {
   function scrollToCard(index: number) {
     const el = trackRef.current;
     if (!el) return;
-    const clamped = Math.max(0, Math.min(index, MOBILE_CARDS.length - 1));
+    const clamped = Math.max(0, Math.min(index, MEDIA.length - 1));
     const positions = getCardPositions();
     el.scrollTo({ left: positions[clamped] ?? 0, behavior: "smooth" });
     setCurrentIndex(clamped);
@@ -169,13 +196,13 @@ function MobileCarousel() {
   }, []);
 
   const canPrev = currentIndex > 0;
-  const canNext = currentIndex < MOBILE_CARDS.length - 1;
+  const canNext = currentIndex < MEDIA.length - 1;
 
   return (
     <div className="lg:hidden flex flex-col pb-[48px]">
       {/* Title */}
       <div className="px-[16px] pt-[48px]">
-        <SectionHeading lines={["Design"]} center />
+        <SectionHeading lines={["Audiovisual"]} center />
       </div>
 
       {/* ── Track ── */}
@@ -189,33 +216,19 @@ function MobileCarousel() {
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseLeave}
       >
-        {MOBILE_CARDS.map((card, i) => (
+        {MEDIA.map((card, i) => (
           <div
             key={card.alt}
-            className="relative rounded-[8px] shrink-0 h-[220px]"
+            className="relative rounded-[8px] shrink-0 h-[360px] w-[288px] overflow-hidden"
             style={{
-              width: card.w,
               // last card gets right margin so it feels padded
-              marginRight: i === MOBILE_CARDS.length - 1 ? 16 : 0,
+              marginRight: i === MEDIA.length - 1 ? 16 : 0,
             }}
           >
-            {card.inner ? (
-              <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[8px]">
-                <img
-                  alt={card.alt}
-                  className={`absolute max-w-none ${card.inner}`}
-                  src={card.src}
-                  draggable={false}
-                />
-              </div>
-            ) : (
-              <img
-                alt={card.alt}
-                className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[8px] size-full"
-                src={card.src}
-                draggable={false}
-              />
-            )}
+            <Media
+              item={card}
+              className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[8px] size-full"
+            />
           </div>
         ))}
       </div>
@@ -252,7 +265,7 @@ function MobileCarousel() {
 
         {/* Progress indicator */}
         <div className="flex flex-row gap-[6px] ml-[4px]">
-          {MOBILE_CARDS.map((_, i) => (
+          {MEDIA.map((_, i) => (
             <button
               key={i}
               aria-label={`Ir para card ${i + 1}`}
@@ -274,53 +287,29 @@ function MobileCarousel() {
 }
 
 // ── Section ───────────────────────────────────────────────────────────────────
-export function GallerySection() {
+export function PhotoGallerySection() {
   return (
     <section className="w-full">
-      {/* ── DESKTOP: title + flex-wrap masonry-like grid ── */}
+      {/* ── DESKTOP: title + bento grid — 5 columns, cards 2 and 7 span 2 columns ── */}
       <div className="hidden lg:block px-[16px] md:px-[48px] py-[48px] md:py-[96px] w-full max-w-[1344px] mx-auto">
-        <SectionHeading lines={["Design"]} center />
-        <div className="flex flex-wrap content-start gap-[24px] items-start mt-[48px]">
-        {/* Row 1 */}
-        <RevealCard delay={0} className="h-[320px] relative rounded-[8px] shrink-0 w-[269.871px]">
-          <img alt="Gallery 01" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[8px] size-full" src={imgGallery01} />
-        </RevealCard>
-        <RevealCard delay={80} className="h-[320px] relative rounded-[8px] shrink-0 w-[612.067px]">
-          <img alt="Gallery 03" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[8px] size-full" src={imgGallery03} />
-        </RevealCard>
-        <RevealCard delay={160} className="h-[320px] relative rounded-[8px] shrink-0 w-[317.771px]">
-          <img alt="Image 122" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[8px] size-full" src={imgImage122} />
-        </RevealCard>
-
-        {/* Row 2 */}
-        <RevealCard delay={0} className="h-[320px] relative rounded-[8px] shrink-0 w-[383.485px]">
-          <img alt="Image 124" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[8px] size-full" src={imgImage124} />
-        </RevealCard>
-        <RevealCard delay={80} className="h-[320px] relative rounded-[8px] shrink-0 w-[270.161px]">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[8px]">
-            <img alt="Image 130" className="absolute h-[119.47%] left-0 max-w-none top-0 w-full" src={imgImage130} />
-          </div>
-        </RevealCard>
-        <RevealCard delay={160} className="h-[320px] relative rounded-[8px] shrink-0 w-[545.926px]">
-          <img alt="Gallery 02" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[8px] size-full" src={imgGallery02} />
-        </RevealCard>
-
-        {/* Row 3 */}
-        <RevealCard delay={0} className="h-[320px] relative rounded-[8px] shrink-0 w-[269.871px]">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[8px]">
-            <img alt="Rectangle 35" className="absolute h-[108.25%] left-0 max-w-none top-[-8.25%] w-[128.36%]" src={imgRectangle35} />
-          </div>
-        </RevealCard>
-        <RevealCard delay={80} className="h-[320px] relative rounded-[8px] shrink-0 w-[544.8px]">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[8px]">
-            <img alt="Image 129" className="absolute inset-0 max-w-none object-cover rounded-[8px] size-full" src={imgImage129} />
-          </div>
-        </RevealCard>
-        <RevealCard delay={160} className="h-[320px] relative rounded-[8px] shrink-0 w-[384.902px]">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[8px]">
-            <img alt="Image 131" className="absolute h-full left-[-5.74%] max-w-none top-0 w-[113.72%]" src={imgImage131} />
-          </div>
-        </RevealCard>
+        <SectionHeading lines={["Audiovisual"]} center />
+        <div className="grid grid-cols-5 gap-[24px] content-start items-start mt-[48px]">
+        {MEDIA.map((im, i) => {
+          // 2nd (index 1) and penultimate (index length-2) span 2 columns
+          const wide = i === 1 || i === MEDIA.length - 2;
+          return (
+            <RevealCard
+              key={im.alt}
+              delay={(i % 5) * 80}
+              className={`relative rounded-[8px] overflow-hidden shrink-0 w-full h-[300px] ${wide ? "col-span-2" : ""}`}
+            >
+              <Media
+                item={im}
+                className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[8px] size-full"
+              />
+            </RevealCard>
+          );
+        })}
         </div>
       </div>
 

@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import svgPaths from "@/assets/svg-8c58j1dinl";
+import { SectionHeading } from "./SectionHeading";
+
+const HEADING = ["Web Design", "& Desenvolvimento"];
 import imgImg  from "@/assets/website-bata.webp";
 import imgImg1 from "@/assets/website-gama.webp";
 import imgImg2 from "@/assets/website-jn.webp";
@@ -89,17 +92,14 @@ interface CardProps {
   row: number;
 }
 
-function ProjectCard({ title, url, image, techs, delay = 0, col, row }: CardProps) {
+function ProjectCard({ title, url, image, techs, delay = 0 }: CardProps) {
   const { ref, style } = useReveal(delay);
 
   return (
     <div
       ref={ref}
-      style={{
-        ...style,
-        // Desktop explicit grid placement — overridden on mobile via grid-cols-1 auto-flow
-      }}
-      className={`flex flex-col gap-[16px] items-start min-w-0 lg:col-start-${col} lg:row-start-${row}`}
+      style={style}
+      className="flex flex-col gap-[16px] items-start min-w-0"
     >
       {/* Image */}
       <div className="relative rounded-[4px] shrink-0 w-full" style={{ aspectRatio: "389.6328125 / 212" }}>
@@ -130,45 +130,6 @@ function ProjectCard({ title, url, image, techs, delay = 0, col, row }: CardProp
       </a>
 
       <TechStack techs={techs} />
-    </div>
-  );
-}
-
-// ── Section title (col 1, row 1 on desktop) ───────────────────────────────────
-function SectionTitle({ mobile }: { mobile?: boolean }) {
-  const { ref, style } = useReveal(0);
-
-  return (
-    <div
-      ref={ref}
-      style={style}
-      className="lg:col-start-1 lg:row-start-1 lg:self-stretch"
-    >
-      <div className="flex flex-col gap-[32px] lg:gap-0 lg:justify-between lg:h-full lg:py-[48px]">
-        {/* Title text */}
-        <div
-          className="text-[#e3e3e3] text-[32px] lg:text-[48px] leading-[1.2]"
-          style={{ fontFamily: "'Golos Text', sans-serif", fontWeight: 500 }}
-        >
-          <p className="mb-0">Alguns projetos</p>
-          <p className="mb-0">que atuei como</p>
-          <p>Web Designer</p>
-        </div>
-
-        {/* Arrow icon */}
-        <div className="relative shrink-0 size-[72px] overflow-hidden">
-          <div className="absolute inset-[18.75%]">
-            <svg
-              className="absolute block size-full"
-              fill="none"
-              preserveAspectRatio="none"
-              viewBox="0 0 45 45"
-            >
-              <path d={svgPaths.p9166b80} fill="#BFBFC0" />
-            </svg>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
@@ -289,7 +250,7 @@ function MobileCarousel() {
     <div className="lg:hidden flex flex-col">
       {/* Title */}
       <div className="px-[16px] pt-[48px]">
-        <SectionTitle mobile />
+        <SectionHeading lines={HEADING} />
       </div>
 
       {/* Scrollable track */}
@@ -401,24 +362,21 @@ function MobileCarousel() {
 export function WebsitesSection() {
   return (
     <section className="w-full">
-      {/* ── DESKTOP grid ── */}
-      <div
-        className="
-          hidden lg:grid
-          w-full max-w-[1344px] mx-auto
-          lg:px-[48px] lg:py-[96px]
-          lg:grid-cols-2
-          gap-x-[48px] gap-y-[48px]
-        "
-      >
-        <SectionTitle />
-        {PROJECTS.map((p) => (
-          <ProjectCard
-            key={p.title}
-            {...p}
-            delay={p.col === 1 ? 0 : 150}
-          />
-        ))}
+      {/* ── DESKTOP ── */}
+      <div className="hidden lg:block w-full max-w-[1344px] mx-auto lg:px-[48px] lg:py-[96px]">
+        {/* Title above, outside the grid */}
+        <SectionHeading lines={HEADING} />
+
+        {/* Projects grid */}
+        <div className="grid grid-cols-2 gap-x-[48px] gap-y-[48px] mt-[48px]">
+          {PROJECTS.map((p, i) => (
+            <ProjectCard
+              key={p.title}
+              {...p}
+              delay={(i % 2) * 150}
+            />
+          ))}
+        </div>
       </div>
 
       {/* ── MOBILE carousel ── */}

@@ -42,15 +42,22 @@ function InstagramIcon() {
 export function Footer() {
   return (
     <footer className="w-full backdrop-blur-[40px]">
-      <div className="flex flex-wrap gap-[16px] items-center justify-start md:justify-center px-[24px] py-[48px]">
-        <PrimaryButton 
+      <div className="flex flex-wrap gap-[16px] items-center justify-center px-[24px] py-[48px]">
+        {/* <PrimaryButton 
           label="Baixar CV" 
           href="https://docs.google.com/document/d/1AIE_xj8nXJt_l9fE_-QZChB8A6H3OJZm/edit?usp=sharing&ouid=100658739830673008130&rtpof=true&sd=true" 
-        />
+        /> */}
 
-        <LinkButton
+        <PrimaryButton label="Fale Conosco" href="https://wa.me/55996926648" />
+
+        {/* <LinkButton
           label="55 9 9669 8296"
           href="https://wa.me/5596698296"
+          icon={<WhatsAppIcon />}
+        />
+        <LinkButton
+          label="55 9 99692 6648"
+          href="https://wa.me/55996926648"
           icon={<WhatsAppIcon />}
         />
 
@@ -64,13 +71,13 @@ export function Footer() {
           label="/darlanpaz"
           href="https://behance.net/darlanpaz"
           icon={<BehanceIcon />}
-        />
+        /> */}
 
-        <LinkButton
+        {/* <LinkButton
           label="/darlanpaz"
           href="https://behance.net/darlanpaz"
           icon={<BehanceIcon />}
-        />
+        /> */}
 
         {/* <LinkButton
           label="/darlan_paz"

@@ -3,9 +3,18 @@ import { PrimaryButton } from "./PrimaryButton";
 
 export function Header() {
   return (
-    <header className="w-full flex items-center justify-between backdrop-blur-[40px] p-6">
-      <Logo />
-      <PrimaryButton label="Baixar CV" href="https://docs.google.com/document/d/1AIE_xj8nXJt_l9fE_-QZChB8A6H3OJZm/edit?usp=sharing&ouid=100658739830673008130&rtpof=true&sd=true" />
-    </header>
+    <>
+      {/* Adaptive logo — its own fixed layer so mix-blend-difference blends against
+          the page content behind it (Apple-style). A fixed parent creates its own
+          stacking context, so the blended element must itself be the fixed one. */}
+      <div className="fixed top-0 left-0 z-50 flex items-center h-[88px] px-6 mix-blend-difference pointer-events-none">
+        <Logo />
+      </div>
+
+      {/* CTA — separate fixed layer (not blended) */}
+      <div className="fixed top-0 right-0 z-50 flex items-center h-[88px] px-6">
+        <PrimaryButton label="Fale Conosco" href="https://wa.me/55996926648" compactMobile />
+      </div>
+    </>
   );
 }
