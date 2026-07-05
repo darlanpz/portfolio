@@ -1,16 +1,27 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
+import { Lightbox, type LightboxItem } from "./Lightbox";
 import img1 from "@/assets/photo-gallery-1.webp";
 import img2 from "@/assets/photo-gallery-2.webp";
-import img4 from "@/assets/photo-gallery-4.webp";
-import img5 from "@/assets/photo-gallery-5.webp";
+import img4 from "@/assets/photo-gallery-10.webp";
+import img5 from "@/assets/photo-gallery-14.webp";
 import img7 from "@/assets/photo-gallery-7.webp";
-import img8 from "@/assets/photo-gallery-8.webp";
+import img8 from "@/assets/photo-gallery-16.webp";
+import img9 from "@/assets/photo-gallery-9.webp";
+import img11 from "@/assets/photo-gallery-11.webp";
+import img12 from "@/assets/photo-gallery-12.webp";
+import img13 from "@/assets/photo-gallery-13.webp";
+import img15 from "@/assets/photo-gallery-15.webp";
+import img17 from "@/assets/photo-gallery-17.webp";
+import img18 from "@/assets/photo-gallery-18.webp";
+import img19 from "@/assets/photo-gallery-19.webp";
 import vid1 from "@/assets/gallery-video-1.mp4";
 import vid2 from "@/assets/gallery-video-2.mp4";
+import vid3 from "@/assets/gallery-video-3.mp4";
 import vidPoster1 from "@/assets/gallery-video-1.webp";
 import vidPoster2 from "@/assets/gallery-video-2.webp";
+import vidPoster3 from "@/assets/gallery-video-3.webp";
 
 // ── Gallery media (portrait images + autoplay videos) ─────────────────────────
 type MediaItem =
@@ -20,13 +31,28 @@ type MediaItem =
 const MEDIA: MediaItem[] = [
   { src: img1, alt: "Galeria 1" },
   { src: img2, alt: "Galeria 2" },
-  { video: vid1, poster: vidPoster1, alt: "Galeria 3" }, // posição 3
+  { video: vid1, poster: vidPoster1, alt: "Galeria 3" },
   { src: img4, alt: "Galeria 4" },
   { src: img5, alt: "Galeria 5" },
-  { video: vid2, poster: vidPoster2, alt: "Galeria 6" }, // posição 6
+  { video: vid2, poster: vidPoster2, alt: "Galeria 6" },
   { src: img7, alt: "Galeria 7" },
   { src: img8, alt: "Galeria 8" },
+  { src: img9, alt: "Galeria 9" },
+  { src: img11, alt: "Galeria 10" },
+  { src: img12, alt: "Galeria 11" },
+  { src: img13, alt: "Galeria 12" },
+  { src: img15, alt: "Galeria 13" },
+  { src: img17, alt: "Galeria 14" },
+  { src: img18, alt: "Galeria 15" },
+  { src: img19, alt: "Galeria 16" },
+  { video: vid3, poster: vidPoster3, alt: "Galeria 17" },
 ];
+
+function mediaToLb(m: MediaItem): LightboxItem {
+  return "video" in m
+    ? { type: "video", src: m.video, poster: m.poster }
+    : { type: "image", src: m.src, alt: m.alt };
+}
 
 // ── Media renderer (image or muted autoplay video) ────────────────────────────
 function Media({ item, className }: { item: MediaItem; className: string }) {
@@ -55,10 +81,12 @@ function RevealCard({
   delay = 0,
   className = "",
   children,
+  onClick,
 }: {
   delay?: number;
   className?: string;
   children: React.ReactNode;
+  onClick?: () => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -82,6 +110,7 @@ function RevealCard({
   return (
     <div
       ref={ref}
+      onClick={onClick}
       className={`${className} relative cursor-pointer hover:[scale:1.05] hover:z-10`}
       style={{
         // reveal uses the individual `translate` property so the hover `scale`
@@ -97,7 +126,7 @@ function RevealCard({
 }
 
 // ── Mobile carousel ───────────────────────────────────────────────────────────
-function MobileCarousel() {
+function MobileCarousel({ onOpen }: { onOpen: (item: LightboxItem) => void }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -219,7 +248,8 @@ function MobileCarousel() {
         {MEDIA.map((card, i) => (
           <div
             key={card.alt}
-            className="relative rounded-[8px] shrink-0 h-[360px] w-[288px] overflow-hidden"
+            onClick={() => { if (!drag.current.moved) onOpen(mediaToLb(card)); }}
+            className="relative rounded-none shrink-0 h-[360px] w-[288px] overflow-hidden cursor-pointer"
             style={{
               // last card gets right margin so it feels padded
               marginRight: i === MEDIA.length - 1 ? 16 : 0,
@@ -227,7 +257,7 @@ function MobileCarousel() {
           >
             <Media
               item={card}
-              className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[8px] size-full"
+              className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-none size-full"
             />
           </div>
         ))}
@@ -288,24 +318,26 @@ function MobileCarousel() {
 
 // ── Section ───────────────────────────────────────────────────────────────────
 export function PhotoGallerySection() {
+  const [lb, setLb] = useState<LightboxItem | null>(null);
   return (
     <section className="w-full">
       {/* ── DESKTOP: title + bento grid — 5 columns, cards 2 and 7 span 2 columns ── */}
       <div className="hidden lg:block px-[16px] md:px-[48px] py-[48px] md:py-[96px] w-full max-w-[1344px] mx-auto">
         <SectionHeading lines={["Audiovisual"]} center />
-        <div className="grid grid-cols-5 gap-[24px] content-start items-start mt-[48px]">
+        <div className="grid grid-cols-5 gap-[24px] content-start items-start mt-[48px] [grid-auto-flow:dense]">
         {MEDIA.map((im, i) => {
-          // 2nd (index 1) and penultimate (index length-2) span 2 columns
-          const wide = i === 1 || i === MEDIA.length - 2;
+          // A few images span 2 columns for a bento rhythm (never videos)
+          const wide = i % 6 === 1 && !("video" in im);
           return (
             <RevealCard
               key={im.alt}
               delay={(i % 5) * 80}
-              className={`relative rounded-[8px] overflow-hidden shrink-0 w-full h-[300px] ${wide ? "col-span-2" : ""}`}
+              onClick={() => setLb(mediaToLb(im))}
+              className={`relative rounded-none overflow-hidden shrink-0 w-full h-[300px] ${wide ? "col-span-2" : ""}`}
             >
               <Media
                 item={im}
-                className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[8px] size-full"
+                className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-none size-full"
               />
             </RevealCard>
           );
@@ -314,7 +346,9 @@ export function PhotoGallerySection() {
       </div>
 
       {/* ── MOBILE: draggable carousel with nav ── */}
-      <MobileCarousel />
+      <MobileCarousel onOpen={setLb} />
+
+      <Lightbox item={lb} onClose={() => setLb(null)} />
     </section>
   );
 }

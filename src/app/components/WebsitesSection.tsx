@@ -11,6 +11,9 @@ import imgImg3 from "@/assets/website-redeorigen.webp";
 import imgImg4 from "@/assets/website-dotto.webp";
 import imgImg5 from "@/assets/website-inpalco.webp";
 import imgImg6 from "@/assets/website-cr3.webp";
+import imgLof from "@/assets/website-lof.webp";
+import imgValduga from "@/assets/website-valduga.webp";
+import imgMainardi from "@/assets/website-mainardi.webp";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 type TechType = "figma" | "html" | "css" | "wordpress" | "elementor" | "prismic" | "next";
@@ -54,7 +57,7 @@ const techPaths: Record<TechType, string> = {
   next:       svgPaths.p379366f2,
 };
 
-function TechIcon({ type }: { type: TechType }) {
+function TechIcon({ type, color = "#444746" }: { type: TechType; color?: string }) {
   return (
     <div className="relative shrink-0 size-[20px]">
       <svg
@@ -64,7 +67,7 @@ function TechIcon({ type }: { type: TechType }) {
       >
         <path
           d={techPaths[type]}
-          fill="#444746"
+          fill={color}
           {...(type === "figma" ? { fillRule: "evenodd" as const, clipRule: "evenodd" as const } : {})}
         />
       </svg>
@@ -72,10 +75,10 @@ function TechIcon({ type }: { type: TechType }) {
   );
 }
 
-function TechStack({ techs }: { techs: TechType[] }) {
+function TechStack({ techs, center = false, color }: { techs: TechType[]; center?: boolean; color?: string }) {
   return (
-    <div className="flex gap-[12px] items-start w-full">
-      {techs.map((t) => <TechIcon key={t} type={t} />)}
+    <div className={`flex gap-[12px] items-center w-full ${center ? "justify-center" : ""}`}>
+      {techs.map((t) => <TechIcon key={t} type={t} color={color} />)}
     </div>
   );
 }
@@ -87,9 +90,9 @@ interface CardProps {
   image: string;
   techs: TechType[];
   delay?: number;
-  /** Desktop grid placement (col + row, 1-based) */
-  col: number;
-  row: number;
+  /** Desktop grid placement (legacy, unused with auto-flow) */
+  col?: number;
+  row?: number;
 }
 
 function ProjectCard({ title, url, image, techs, delay = 0 }: CardProps) {
@@ -101,14 +104,32 @@ function ProjectCard({ title, url, image, techs, delay = 0 }: CardProps) {
       style={style}
       className="flex flex-col gap-[16px] items-start min-w-0"
     >
-      {/* Image */}
-      <div className="relative rounded-[4px] shrink-0 w-full" style={{ aspectRatio: "389.6328125 / 212" }}>
+      {/* Card — screenshot; on hover the background darkens and reveals the URL
+          (centred) with the tech icons below it. */}
+      <a
+        href={`https://${url}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={title}
+        className="group relative block w-full cursor-pointer overflow-hidden"
+        style={{ aspectRatio: "389.6328125 / 228" }}
+      >
         <img
           alt={title}
-          className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[4px] size-full"
+          className="absolute inset-0 max-w-none object-cover size-full"
           src={image}
         />
-      </div>
+        {/* Hover overlay */}
+        <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-[24px] p-[20px]">
+          <span
+            className="text-[#e3e3e3] text-[20px] leading-[1.4] tracking-[-0.28px] text-center"
+            style={{ fontFamily: "'Golos Text', sans-serif" }}
+          >
+            {url}
+          </span>
+          <TechStack techs={techs} center color="#e3e3e3" />
+        </div>
+      </a>
 
       {/* Name */}
       <p
@@ -117,25 +138,15 @@ function ProjectCard({ title, url, image, techs, delay = 0 }: CardProps) {
       >
         {title}
       </p>
-
-      {/* URL */}
-      <a
-        href={`https://${url}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="shrink-0 text-[#bfbfc0] text-[14px] leading-[1.5] tracking-[-0.28px] w-full hover:text-[#e3e3e3] transition-colors duration-200 underline-offset-2 hover:underline"
-        style={{ fontFamily: "'Golos Text', sans-serif" }}
-      >
-        {url}
-      </a>
-
-      <TechStack techs={techs} />
     </div>
   );
 }
 
 // ── Projects data ─────────────────────────────────────────────────────────────
 const PROJECTS: Omit<CardProps, "delay">[] = [
+  { title: "Valduga Concretos", url: "valdugaconcreto.com.br",  image: imgValduga,  techs: ["figma", "wordpress"] },
+  { title: "Mainardi Hotel",    url: "mainardihotel.com.br",    image: imgMainardi, techs: ["figma", "wordpress", "elementor"] },
+  { title: "Löf Reprodução",    url: "lofreproducao.com.br",    image: imgLof,      techs: ["figma", "wordpress", "elementor"] },
   { title: "Bataiolli",  url: "www.bataiolli.com.br",     image: imgImg,  techs: ["figma", "html", "css"],                    col: 2, row: 1 },
   { title: "Gama-log",   url: "www.gama-log.com.br",      image: imgImg1, techs: ["figma", "wordpress", "elementor"],          col: 1, row: 2 },
   { title: "Origen",     url: "www.redeorigen.com.br",    image: imgImg3, techs: ["figma", "wordpress", "elementor"],          col: 1, row: 3 },
@@ -274,10 +285,10 @@ function MobileCarousel() {
             }}
           >
             {/* Image */}
-            <div className="relative rounded-[4px] w-full" style={{ aspectRatio: "389 / 212" }}>
+            <div className="relative rounded-none w-full" style={{ aspectRatio: "389 / 212" }}>
               <img
                 alt={p.title}
-                className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[4px] size-full"
+                className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-none size-full"
                 src={p.image}
                 draggable={false}
               />

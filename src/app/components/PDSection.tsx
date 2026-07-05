@@ -46,11 +46,11 @@ function PDCard({ image, alt, url, delay = 0 }: PDCardProps) {
   const { ref, style } = useReveal(delay);
 
   return (
-    <div ref={ref} style={style} className="relative rounded-[8px] shrink-0 w-full">
-      <div className="aspect-[979/537] relative rounded-[8px] w-full overflow-hidden">
+    <div ref={ref} style={style} className="relative rounded-none shrink-0 w-full">
+      <div className="aspect-[979/537] relative rounded-none w-full overflow-hidden">
         <img
           alt={alt}
-          className="absolute inset-0 max-w-none object-cover rounded-[8px] size-full"
+          className="absolute inset-0 max-w-none object-cover rounded-none size-full"
           src={image}
         />
         {/* Purple border overlay */}
@@ -59,7 +59,7 @@ function PDCard({ image, alt, url, delay = 0 }: PDCardProps) {
           target="_blank"
           rel="noopener noreferrer"
           aria-label={alt}
-          className="absolute inset-0 rounded-[8px]"
+          className="absolute inset-0 rounded-none"
           style={{ border: "1px solid #b4a8fa" }}
         />
       </div>
@@ -78,16 +78,14 @@ function StickyText() {
           className="text-[#e3e3e3] text-[32px] lg:text-[48px] leading-[1.2] w-full"
           style={{ fontFamily: "'Golos Text', sans-serif", fontWeight: 500 }}
         >
-          Automação, Redução de Custos e Integração
+          Product Design
         </h2>
         <p
           className="text-[#bfbfc0] text-[16px] leading-[1.5] w-full"
           style={{ fontFamily: "'Golos Text', sans-serif", fontWeight: 400 }}
         >
-          Como apliquei o Product Design para reduzir o tempo de emissão dos
-          documentos internacionais em 80% e automatizamos o processo de Follow
-          Up em fronteira com integrações às aduanas e aos sistemas
-          governamentais.
+          Redução o tempo de emissão dos documentos internacionais em 80% e automação do processo de Follow
+          Up em fronteira com integrações às aduanas e aos sistemas governamentais.
         </p>
       </div>
     </div>

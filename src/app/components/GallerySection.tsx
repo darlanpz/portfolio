@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
+import { Lightbox, type LightboxItem } from "./Lightbox";
 import imgGallery01 from "@/assets/editorial-tour-museus.webp";
 import imgGallery03 from "@/assets/brand-vitor-garcia.webp";
 import imgImage122 from "@/assets/brand-butecos.webp";
@@ -70,7 +71,7 @@ const MOBILE_CARDS = [
   { alt: "Image 131", src: imgImage131,  w: 260, inner: "h-full left-[-5.74%] top-0 w-[113.72%]" },
 ] as const;
 
-function MobileCarousel() {
+function MobileCarousel({ onOpen }: { onOpen: (item: LightboxItem) => void }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -192,7 +193,8 @@ function MobileCarousel() {
         {MOBILE_CARDS.map((card, i) => (
           <div
             key={card.alt}
-            className="relative rounded-[8px] shrink-0 h-[220px]"
+            onClick={() => { if (!drag.current.moved) onOpen({ type: "image", src: card.src, alt: card.alt }); }}
+            className="relative rounded-none shrink-0 h-[220px] cursor-pointer"
             style={{
               width: card.w,
               // last card gets right margin so it feels padded
@@ -200,7 +202,7 @@ function MobileCarousel() {
             }}
           >
             {card.inner ? (
-              <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[8px]">
+              <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-none">
                 <img
                   alt={card.alt}
                   className={`absolute max-w-none ${card.inner}`}
@@ -211,7 +213,7 @@ function MobileCarousel() {
             ) : (
               <img
                 alt={card.alt}
-                className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[8px] size-full"
+                className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-none size-full"
                 src={card.src}
                 draggable={false}
               />
@@ -275,49 +277,58 @@ function MobileCarousel() {
 
 // ── Section ───────────────────────────────────────────────────────────────────
 export function GallerySection() {
+  const [lb, setLb] = useState<LightboxItem | null>(null);
   return (
     <section className="w-full">
       {/* ── DESKTOP: title + flex-wrap masonry-like grid ── */}
       <div className="hidden lg:block px-[16px] md:px-[48px] py-[48px] md:py-[96px] w-full max-w-[1344px] mx-auto">
         <SectionHeading lines={["Design"]} center />
-        <div className="flex flex-wrap content-start gap-[24px] items-start mt-[48px]">
+        <div
+          className="flex flex-wrap content-start gap-[24px] items-start mt-[48px]"
+          onClick={(e) => {
+            const t = e.target as HTMLElement;
+            if (t === e.currentTarget) return;
+            const img = t.querySelector?.("img") as HTMLImageElement | null;
+            if (img) setLb({ type: "image", src: img.currentSrc || img.src, alt: img.alt });
+          }}
+        >
         {/* Row 1 */}
-        <RevealCard delay={0} className="h-[320px] relative rounded-[8px] shrink-0 w-[269.871px]">
-          <img alt="Gallery 01" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[8px] size-full" src={imgGallery01} />
+        <RevealCard delay={0} className="h-[320px] relative rounded-none shrink-0 w-[269.871px]">
+          <img alt="Gallery 01" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-none size-full" src={imgGallery01} />
         </RevealCard>
-        <RevealCard delay={80} className="h-[320px] relative rounded-[8px] shrink-0 w-[612.067px]">
-          <img alt="Gallery 03" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[8px] size-full" src={imgGallery03} />
+        <RevealCard delay={80} className="h-[320px] relative rounded-none shrink-0 w-[612.067px]">
+          <img alt="Gallery 03" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-none size-full" src={imgGallery03} />
         </RevealCard>
-        <RevealCard delay={160} className="h-[320px] relative rounded-[8px] shrink-0 w-[317.771px]">
-          <img alt="Image 122" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[8px] size-full" src={imgImage122} />
+        <RevealCard delay={160} className="h-[320px] relative rounded-none shrink-0 w-[317.771px]">
+          <img alt="Image 122" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-none size-full" src={imgImage122} />
         </RevealCard>
 
         {/* Row 2 */}
-        <RevealCard delay={0} className="h-[320px] relative rounded-[8px] shrink-0 w-[383.485px]">
-          <img alt="Image 124" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[8px] size-full" src={imgImage124} />
+        <RevealCard delay={0} className="h-[320px] relative rounded-none shrink-0 w-[383.485px]">
+          <img alt="Image 124" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-none size-full" src={imgImage124} />
         </RevealCard>
-        <RevealCard delay={80} className="h-[320px] relative rounded-[8px] shrink-0 w-[270.161px]">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[8px]">
+        <RevealCard delay={80} className="h-[320px] relative rounded-none shrink-0 w-[270.161px]">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-none">
             <img alt="Image 130" className="absolute h-[119.47%] left-0 max-w-none top-0 w-full" src={imgImage130} />
           </div>
         </RevealCard>
-        <RevealCard delay={160} className="h-[320px] relative rounded-[8px] shrink-0 w-[545.926px]">
-          <img alt="Gallery 02" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[8px] size-full" src={imgGallery02} />
+        <RevealCard delay={160} className="h-[320px] relative rounded-none shrink-0 w-[545.926px]">
+          <img alt="Gallery 02" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-none size-full" src={imgGallery02} />
         </RevealCard>
 
         {/* Row 3 */}
-        <RevealCard delay={0} className="h-[320px] relative rounded-[8px] shrink-0 w-[269.871px]">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[8px]">
+        <RevealCard delay={0} className="h-[320px] relative rounded-none shrink-0 w-[269.871px]">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-none">
             <img alt="Rectangle 35" className="absolute h-[108.25%] left-0 max-w-none top-[-8.25%] w-[128.36%]" src={imgRectangle35} />
           </div>
         </RevealCard>
-        <RevealCard delay={80} className="h-[320px] relative rounded-[8px] shrink-0 w-[544.8px]">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[8px]">
-            <img alt="Image 129" className="absolute inset-0 max-w-none object-cover rounded-[8px] size-full" src={imgImage129} />
+        <RevealCard delay={80} className="h-[320px] relative rounded-none shrink-0 w-[544.8px]">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-none">
+            <img alt="Image 129" className="absolute inset-0 max-w-none object-cover rounded-none size-full" src={imgImage129} />
           </div>
         </RevealCard>
-        <RevealCard delay={160} className="h-[320px] relative rounded-[8px] shrink-0 w-[384.902px]">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[8px]">
+        <RevealCard delay={160} className="h-[320px] relative rounded-none shrink-0 w-[384.902px]">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-none">
             <img alt="Image 131" className="absolute h-full left-[-5.74%] max-w-none top-0 w-[113.72%]" src={imgImage131} />
           </div>
         </RevealCard>
@@ -325,7 +336,9 @@ export function GallerySection() {
       </div>
 
       {/* ── MOBILE: draggable carousel with nav ── */}
-      <MobileCarousel />
+      <MobileCarousel onOpen={setLb} />
+
+      <Lightbox item={lb} onClose={() => setLb(null)} />
     </section>
   );
 }
